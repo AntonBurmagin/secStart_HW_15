@@ -1,31 +1,38 @@
 #include <iostream>
 #include <vector>
 
-void findIndexMaxSum (int arr[]) {
-    int start = 0, end = 0, startTemp = 0, endTemp = 0;
-    int sumMax = 0, sumTemp = 0;
-    for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++) {
-        if (arr[i] >= 0) {
-            if(sumMax > 0){
-                if((sumTemp + arr[i]) > 0) {
-                    sumMax += sumTemp;
-                }
-            }
-            sumTemp += arr[i];
-            endTemp = i;
+//int arr[] = {-2, 1, -3, 4, -1 ,2 ,1 ,-5 ,4, -100, 100};
+void findIndexMaxSum (int arr[], int size) {
+    int minSumIndex = 0, maxSumIndex = 0;
+    int minSumIndexSave = 0, maxSumIndexSave = 0;
+    int minSum = 0, maxSum = -1;
+    int sum = 0, sumSave = -1;
+    
+    for (int i = 0; i < size; i++) {
+        sum += arr[i];
+        if (sum < minSum) {
+            minSum = sum;
+            minSumIndex = i;
+        } else if (sum >= maxSum || (maxSum < 0 && sum > minSum)) {
+            maxSum = sum;
+            maxSumIndex = i;
+        } 
 
-        } else {
-            if (sumTemp > sumMax) {
-                sumMax = sumTemp;
-                start = startTemp;
-                end = endTemp;
-                startTemp = i;
-                endTemp = i;
-            }
-            sumTemp += arr[i];
-            endTemp = i;
+        if (maxSumIndex > minSumIndex && (maxSum - minSum >= sumSave)) {
+            sumSave = maxSum - minSum;
+            minSumIndexSave = minSumIndex;
+            if (arr[minSumIndex] < 0)
+                minSumIndexSave++; // +1 as we don't include such index
+            maxSumIndexSave = maxSumIndex;
         }
     }
+    if (sumSave >= 0) {
+        std::cout << "Maximum Sum of consecutive elements is between " << minSumIndexSave << " and "
+                  << maxSumIndexSave << ". Sum is " << sumSave << std::endl;
+    } else {
+        std::cout << "Couldn't find such sequence!" << std::endl;
+    }
+    
 }
 
 void sortVec(std::vector<int> &v) {
@@ -40,8 +47,9 @@ void sortVec(std::vector<int> &v) {
 
 int main() {
     // 15.6.1 
-    int arr[] = {-2, 1, -3, 4, -1 ,2 ,1 ,-5 ,4};
-
+    //std::cout << i << " " << maxSum << " " << minSum << std::endl;
+    int arr[] = {-10, 5,-2, 1, -3, 4, -1 ,2 ,1 ,-5 ,4, -100, 100};
+    findIndexMaxSum(arr, sizeof(arr)/sizeof(arr[0]));
 
     // 15.6.2 find two numbers which gives Rusult as sum
     /*
@@ -59,6 +67,7 @@ int main() {
     */
 
     // 15.6.3 
+    /*
     int number;
     std::vector<int> vec;
     while(true) {
@@ -86,6 +95,7 @@ int main() {
             }
         }
     }
+    */
 
 
 }
